@@ -60,24 +60,8 @@
                             'spins'    : rotations,             // The number of complete 360 degree rotations the wheel is to do.
                             // Remember to do something after the animation has finished specify callback function.
                            'callbackFinished' : 'alertPrize()',
- 
-            // During the animation need to call the drawTriangle() to re-draw the pointer each frame.
-                           /* 'callbackAfter' : 'drawColourTriangle()',*/
+
                         },
-              
-                /* [
-                       {'fillStyle' : '#96e987','textFontWeight' : 900,'textStrokeStyle' : '#ffffff', 'text' :'Saab' },
-                       {'fillStyle' : '#876e40','textFontWeight' : 900,'textStrokeStyle' : '#ffffff', 'text' :'Volvo' },
-                       {'fillStyle' : '#f14985','textFontWeight' : 900,'textStrokeStyle' : '#ffffff', 'text' :'BMW' },
-                       {'fillStyle' : '#6f2a87','textFontWeight' : 900,'textStrokeStyle' : '#ffffff', 'text' :'Chevy' },
-                       {'fillStyle' : '#72f497','textFontWeight' : 900,'textStrokeStyle' : '#ffffff', 'text' :'Saab' },
-                       {'fillStyle' : '#94c16a','textFontWeight' : 900,'textStrokeStyle' : '#ffffff', 'text' :'Volvo' },
-                       {'fillStyle' : '#f983ee','textFontWeight' : 900,'textStrokeStyle' : '#ffffff', 'text' :'BMW' },
-                       {'fillStyle' : '#560b45','textFontWeight' : 900,'textStrokeStyle' : '#ffffff', 'text' :'Chevy' },
-                       {'fillStyle' : '#d0c144','textFontWeight' : 900,'textStrokeStyle' : '#ffffff', 'text' :'Saab' },
-                       {'fillStyle' : '#2d26da','textFontWeight' : 900,'textStrokeStyle' : '#ffffff', 'text' :'Volvo' },
-                       {'fillStyle' : '#57cb17','textFontWeight' : 900,'textStrokeStyle' : '#ffffff', 'text' :'BMW' },
-                    ]*/
 
     });
     
@@ -105,7 +89,6 @@
 
     function alertPrize()
     {
-        //alert("tes222t");
         // Call getIndicatedSegment() function to return pointer to the segment pointed to on wheel.
         var winningSegmentNumber = theWheel.getIndicatedSegmentNumber();
         var winningSegment = theWheel.getIndicatedSegment();
@@ -137,18 +120,7 @@
        // alertPrize();
         spin.disabled = false;
         reset.disabled = true;  
-        /* for (var x = 1; x < theWheel.segments.length; x ++)
-        {
-            theWheel.segments[x].fillStyle = 'gray';
-        }*/
-
-        //theWheel.segments[winningSegmentNumber].fillStyle = 'yellow';
-        //theWheel.draw();
-        //drawColourTriangle();
-        //alert("You have won " + winningSegment.text + "!");
-        
- 
-        // Basic alert of the segment text which is the prize name.
+       
      
     }
     
@@ -182,33 +154,10 @@
         theWheel.rotationAngle= Math.random() * (360 - 3) + 3;;
         //setNames(); 
         theWheel.draw(); 
-        //drawTriangle();
        // alertPrize();
         spin.disabled = false;
         reset.disabled = true;  
     }
-
-
-  /*drawColourTriangle();
- 
-    // Draw pointer on canvas, this time on the right.
-    function drawColourTriangle()
-    {
-        // Get context used by the wheel.
-        var ctx = theWheel.ctx;
- 
-        ctx.strokeStyle = 'navy';  // Set line colour.
-        ctx.fillStyle   = 'aqua';  // Set fill colour.
-        ctx.lineWidth   = 2;
-        ctx.beginPath();           // Begin path.
- 
-        ctx.moveTo(600, 174);      // Move to initial position.
-        ctx.lineTo(620, 226);      // Draw lines to make the shape.
-        ctx.lineTo(600, 200);
-        ctx.lineTo(630, 175);
-        ctx.stroke();              // Complete the path by stroking (draw lines).
-        ctx.fill();
-    }*/
 
 
         </script>
