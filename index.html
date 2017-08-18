@@ -1,0 +1,222 @@
+<html>
+    <head>
+        <title>My Winning Wheel</title>
+
+        <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed" rel="stylesheet">
+        <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+      
+        <link rel="stylesheet" href="../spin the wheel/myWheel.css"  type="text/css">
+        <script src='Winwheel.min.js'></script>
+        <script src='TweenMax.min.js'></script>
+        
+    </head>
+    <body>
+    <div id="center"> 
+        <div id="canvasContainer">
+            <canvas id='canvas' width='1200' height='900'>
+                Canvas not supported, use another browser.
+            </canvas>
+        </div>
+    </div>
+  
+        <script>
+            var duration = Math.random() * (9 - 3) + 3;
+            var rotations = duration / 1.5;
+            //var rotations = Math.random() * (duration*2 - 3) + 3
+            // TODO http://dougtesting.net/winwheel/docs/tut6_text_alignment
+            //http://dougtesting.net/winwheel/refs/class_winwheel for more properties
+            var randomHex = '#'+Math.floor(Math.random()*16777215).toString(16);
+            var names = ["1", 
+                        "2", 
+                        "3",
+                        "4",
+                        "5", 
+                        "6"];
+
+
+            var theWheel = new Winwheel({
+                 'outerRadius' : 195,    // Use these three properties to
+                 'centerX'     : 600,    // correctly position the wheel
+                 'centerY'     : 450,    // over the background.
+                 'canvasId'    : 'canvas',
+                 'fillStyle'   : randomHex,
+                 'lineWidth'   : 1,
+                 /*'numSegments' : names.length-1,*/
+                 'textFontSize' : 28,
+                 //'rotationAngle'   : ,
+                 'pins' :    // Specify pin parameters.
+                    {
+                        'number'      : 23,
+                        'outerRadius' : 5,
+                        'margin'      : 5,
+                        'fillStyle'   : '#000000',
+                        'strokeStyle' : '#ffffff'
+                    },
+                   'animation' :                   // Note animation properties passed in constructor parameters.
+                        {
+                            'type'     : 'spinToStop',  // Type of animation.
+                            'duration' : duration,             // How long the animation is to take in seconds.
+                            'spins'    : rotations,             // The number of complete 360 degree rotations the wheel is to do.
+                            // Remember to do something after the animation has finished specify callback function.
+                           'callbackFinished' : 'alertPrize()',
+ 
+            // During the animation need to call the drawTriangle() to re-draw the pointer each frame.
+                           /* 'callbackAfter' : 'drawColourTriangle()',*/
+                        },
+              
+                /* [
+                       {'fillStyle' : '#96e987','textFontWeight' : 900,'textStrokeStyle' : '#ffffff', 'text' :'Saab' },
+                       {'fillStyle' : '#876e40','textFontWeight' : 900,'textStrokeStyle' : '#ffffff', 'text' :'Volvo' },
+                       {'fillStyle' : '#f14985','textFontWeight' : 900,'textStrokeStyle' : '#ffffff', 'text' :'BMW' },
+                       {'fillStyle' : '#6f2a87','textFontWeight' : 900,'textStrokeStyle' : '#ffffff', 'text' :'Chevy' },
+                       {'fillStyle' : '#72f497','textFontWeight' : 900,'textStrokeStyle' : '#ffffff', 'text' :'Saab' },
+                       {'fillStyle' : '#94c16a','textFontWeight' : 900,'textStrokeStyle' : '#ffffff', 'text' :'Volvo' },
+                       {'fillStyle' : '#f983ee','textFontWeight' : 900,'textStrokeStyle' : '#ffffff', 'text' :'BMW' },
+                       {'fillStyle' : '#560b45','textFontWeight' : 900,'textStrokeStyle' : '#ffffff', 'text' :'Chevy' },
+                       {'fillStyle' : '#d0c144','textFontWeight' : 900,'textStrokeStyle' : '#ffffff', 'text' :'Saab' },
+                       {'fillStyle' : '#2d26da','textFontWeight' : 900,'textStrokeStyle' : '#ffffff', 'text' :'Volvo' },
+                       {'fillStyle' : '#57cb17','textFontWeight' : 900,'textStrokeStyle' : '#ffffff', 'text' :'BMW' },
+                    ]*/
+
+    });
+    
+    setNames();
+
+    //sets name to each segment of the wheel from names[]
+    function setNames()
+    {
+       
+        for (var i = 0; i < names.length ; i++)
+        {   
+            //alert(names[i]);
+            var randomHex = '#'+Math.floor(Math.random()*16777215).toString(16);
+            theWheel.addSegment({
+                'fillStyle' : randomHex,
+                'text'      : names[i],
+                'textFontWeight' : 900,
+                'textStrokeStyle' : '#ffffff'
+                },1);
+           
+        }
+        
+        theWheel.draw();
+    }
+
+    function alertPrize()
+    {
+        //alert("tes222t");
+        // Call getIndicatedSegment() function to return pointer to the segment pointed to on wheel.
+        var winningSegmentNumber = theWheel.getIndicatedSegmentNumber();
+        var winningSegment = theWheel.getIndicatedSegment();
+        console.log(JSON.stringify(winningSegmentNumber));
+        console.log(JSON.stringify(winningSegment));
+        //console.log(JSON.stringify(theWheel.animation));
+
+
+        
+        console.log("You have won " + winningSegment.text + "!");
+
+
+        theWheel.stopAnimation(false);
+
+        theWheel.rotationAngle = theWheel.stopAngle;
+        console.log(theWheel.rotationAngle);
+
+        var index = names.indexOf(winningSegment.text);
+        if (index > -1) {
+            names.splice(index, 1);
+        }
+
+       alert(names);
+
+        //theWheel.rotationAngle = Math.random() * (360 - 3) + 3;;
+        //setNames(); 
+        //theWheel.draw(); 
+        //drawTriangle();
+       // alertPrize();
+        spin.disabled = false;
+        reset.disabled = true;  
+        /* for (var x = 1; x < theWheel.segments.length; x ++)
+        {
+            theWheel.segments[x].fillStyle = 'gray';
+        }*/
+
+        //theWheel.segments[winningSegmentNumber].fillStyle = 'yellow';
+        //theWheel.draw();
+        //drawColourTriangle();
+        //alert("You have won " + winningSegment.text + "!");
+        
+ 
+        // Basic alert of the segment text which is the prize name.
+     
+    }
+    
+    
+    function spinWheel()
+    {
+       // alert("tes222t");
+         console.log("Spin for seconds " + duration)
+         console.log(rotations + ": number of rotations per second");
+
+         theWheel.stopAngle = Math.random() * (360 - 1) + 1;
+          console.log("setting Stoping angle at " + theWheel.stopAngle);
+         theWheel.startAnimation();
+         spin.disabled = true;
+         reset.disabled = false;
+         //var tid = setTimeout(resetWheel, duration * 1000 + 1000);
+
+         duration = Math.random() * (8 - 3) + 3;
+         rotations = duration / 2;
+         //rotations = Math.random() * (duration*2 - 3) + 3
+            //alert(tid);
+
+    }
+   
+
+
+    function resetWheel()
+    {
+        //alert("test");
+        theWheel.stopAnimation(false);
+        theWheel.rotationAngle= Math.random() * (360 - 3) + 3;;
+        //setNames(); 
+        theWheel.draw(); 
+        //drawTriangle();
+       // alertPrize();
+        spin.disabled = false;
+        reset.disabled = true;  
+    }
+
+
+  /*drawColourTriangle();
+ 
+    // Draw pointer on canvas, this time on the right.
+    function drawColourTriangle()
+    {
+        // Get context used by the wheel.
+        var ctx = theWheel.ctx;
+ 
+        ctx.strokeStyle = 'navy';  // Set line colour.
+        ctx.fillStyle   = 'aqua';  // Set fill colour.
+        ctx.lineWidth   = 2;
+        ctx.beginPath();           // Begin path.
+ 
+        ctx.moveTo(600, 174);      // Move to initial position.
+        ctx.lineTo(620, 226);      // Draw lines to make the shape.
+        ctx.lineTo(600, 200);
+        ctx.lineTo(630, 175);
+        ctx.stroke();              // Complete the path by stroking (draw lines).
+        ctx.fill();
+    }*/
+
+
+        </script>
+        <div id="center">
+            <button id="spin" onClick="spinWheel();" class="button btn border">Spin</button>
+             <button id="reset" onClick="resetWheel();" class="button btn border">Spin</button>
+
+             
+        </div>
+    </body>
+</html>
