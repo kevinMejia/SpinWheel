@@ -9,45 +9,88 @@
         <link rel="stylesheet" href="../spin the wheel/myWheel.css"  type="text/css">
         <script src='Winwheel.min.js'></script>
         <script src='TweenMax.min.js'></script>
+
+
+
+
+        <script src='names.js'></script>
         
     </head>
     <body>
+    <div id="center">
+        <p>Select a class Grade:
+        <select id="selectClass" onChange="changeClass();" class="  border">
+            <option>class Grade</option>
+        </select>
+        </p>
+
+    </div>
     <div id="center"> 
         <div id="canvasContainer">
-            <canvas id='canvas' width='1200' height='900'>
+            <canvas id='canvas' width='610' height='800'>
                 Canvas not supported, use another browser.
             </canvas>
         </div>
     </div>
-  
-        <script>
-            var duration = Math.random() * (9 - 3) + 3;
+
+    <script>
+
+
+             //var rotations = Math.random() * (duration*2 - 3) + 3
+             // TODO http://dougtesting.net/winwheel/docs/tut6_text_alignment
+             //http://dougtesting.net/winwheel/refs/class_winwheel for more properties
+
+
+            var theWheel;
+            var names;
+            var select = document.getElementById("selectClass");
+            let options = StudentNames;
+            var duration = Math.random() * (4 - 1) + 1;
             var rotations = duration / 1.5;
-            //var rotations = Math.random() * (duration*2 - 3) + 3
-            // TODO http://dougtesting.net/winwheel/docs/tut6_text_alignment
-            //http://dougtesting.net/winwheel/refs/class_winwheel for more properties
             var randomHex = '#'+Math.floor(Math.random()*16777215).toString(16);
-            var names = ["1", 
-                        "2", 
-                        "3",
-                        "4",
-                        "5", 
-                        "6"];
+            var winningSegmentNumber;
+
+            console.log("Spin for seconds " + duration)
+            console.log(rotations + ": number of rotations per second");
+            for (x in options) {
+                    var opt = x;
+                    var el = document.createElement("option");
+                    el.textContent = opt;
+                    el.value = opt;
+                    select.appendChild(el);
+             }
 
 
-            var theWheel = new Winwheel({
-                 'outerRadius' : 195,    // Use these three properties to
-                 'centerX'     : 600,    // correctly position the wheel
-                 'centerY'     : 450,    // over the background.
+            function changeClass()
+            {
+                removeWinnerObjects();
+                options = StudentNames;
+                var t =  $("#selectClass").val();
+                if(t != "class Grade")
+                {
+                    names = options[t];
+                    setNames();
+                }else{theWheel.clearCanvas();}
+
+            }
+
+
+    //sets name to each segment of the wheel from names[]
+    function setNames()
+    {
+     theWheel = new Winwheel({
+                 'outerRadius' : 300,    // The size of the wheel.
+                 'centerX'     : 301,    // correctly position the wheel
+                 'centerY'     : 400,    // over the background.
                  'canvasId'    : 'canvas',
-                 'fillStyle'   : randomHex,
-                 'lineWidth'   : 1,
-                 /*'numSegments' : names.length-1,*/
-                 'textFontSize' : 28,
-                 //'rotationAngle'   : ,
+                // 'fillStyle'   : randomHex,
+                // 'lineWidth'   : null,
+                 'numSegments' : 0,//names.length,
+                 //'textFontSize' : 20,
+
                  'pins' :    // Specify pin parameters.
                     {
-                        'number'      : 23,
+                        //'number'      :25 ,
                         'outerRadius' : 5,
                         'margin'      : 5,
                         'fillStyle'   : '#000000',
@@ -58,114 +101,97 @@
                             'type'     : 'spinToStop',  // Type of animation.
                             'duration' : duration,             // How long the animation is to take in seconds.
                             'spins'    : rotations,             // The number of complete 360 degree rotations the wheel is to do.
-                            // Remember to do something after the animation has finished specify callback function.
-                           'callbackFinished' : 'alertPrize()',
-
+                            'callbackFinished' : 'alertPrize()',
                         },
-
     });
-    
-    setNames();
 
-    //sets name to each segment of the wheel from names[]
-    function setNames()
-    {
-       
         for (var i = 0; i < names.length ; i++)
-        {   
-            //alert(names[i]);
+        {
+           //alert(names[i]);
             var randomHex = '#'+Math.floor(Math.random()*16777215).toString(16);
             theWheel.addSegment({
                 'fillStyle' : randomHex,
                 'text'      : names[i],
-                'textFontWeight' : 900,
-                'textStrokeStyle' : '#ffffff'
+                'textFontFamily' : 'Arial',   'textFontSize' : 27, 'textFontWeight' : 'bold',
+                //'textFontWeight' : 900,
+                'textAlignment'  : 'inner',
+                'textMargin' : 110,
+                'textStrokeStyle' : '#DCDCDC',
                 },1);
-           
+
         }
-        
         theWheel.draw();
     }
 
     function alertPrize()
     {
+
         // Call getIndicatedSegment() function to return pointer to the segment pointed to on wheel.
-        var winningSegmentNumber = theWheel.getIndicatedSegmentNumber();
+        winningSegmentNumber = theWheel.getIndicatedSegmentNumber();
         var winningSegment = theWheel.getIndicatedSegment();
         console.log(JSON.stringify(winningSegmentNumber));
         console.log(JSON.stringify(winningSegment));
-        //console.log(JSON.stringify(theWheel.animation));
-
-
-        
         console.log("You have won " + winningSegment.text + "!");
-
-
+        $('#winnerText').text( winningSegment.text + " won!");
         theWheel.stopAnimation(false);
-
         theWheel.rotationAngle = theWheel.stopAngle;
-        console.log(theWheel.rotationAngle);
-
         var index = names.indexOf(winningSegment.text);
-        if (index > -1) {
-            names.splice(index, 1);
-        }
-
-       alert(names);
-
-        //theWheel.rotationAngle = Math.random() * (360 - 3) + 3;;
-        //setNames(); 
-        //theWheel.draw(); 
-        //drawTriangle();
-       // alertPrize();
         spin.disabled = false;
-        reset.disabled = true;  
-       
-     
+        reset.disabled = true;
+        showRemovePlayerButton();
+
     }
-    
-    
+
+
     function spinWheel()
     {
-       // alert("tes222t");
-         console.log("Spin for seconds " + duration)
-         console.log(rotations + ": number of rotations per second");
-
+         removeWinnerObjects();
          theWheel.stopAngle = Math.random() * (360 - 1) + 1;
-          console.log("setting Stoping angle at " + theWheel.stopAngle);
          theWheel.startAnimation();
          spin.disabled = true;
          reset.disabled = false;
-         //var tid = setTimeout(resetWheel, duration * 1000 + 1000);
-
          duration = Math.random() * (8 - 3) + 3;
          rotations = duration / 2;
-         //rotations = Math.random() * (duration*2 - 3) + 3
-            //alert(tid);
-
     }
-   
+
+    function removeWinnerObjects(){
+         $('#removePlayer').hide();
+         $('#winnerText').text("");
+    }
 
 
-    function resetWheel()
+    function stopWheel()
     {
-        //alert("test");
-        theWheel.stopAnimation(false);
-        theWheel.rotationAngle= Math.random() * (360 - 3) + 3;;
-        //setNames(); 
-        theWheel.draw(); 
-       // alertPrize();
+        theWheel.stopAnimation(true);
         spin.disabled = false;
-        reset.disabled = true;  
+        reset.disabled = true;
+    }
+
+    function deleteSegment()
+    {
+        // Call function to remove a segment from the wheel, by default the last one will be
+        // removed; you can pass in the number of the segment to delete if desired.
+        theWheel.deleteSegment(winningSegmentNumber);
+        // The draw method of the wheel object must be called to render the changes.
+        theWheel.draw();
+        removeWinnerObjects();
+    }
+    function  showRemovePlayerButton(){
+        $('#removePlayer').show();
     }
 
 
-        </script>
-        <div id="center">
-            <button id="spin" onClick="spinWheel();" class="button btn border">Spin</button>
-             <button id="reset" onClick="resetWheel();" class="button btn border">Spin</button>
+    </script>
 
-             
+        <div id="center">
+             <button id="spin" onClick="spinWheel();" class="button btng border">Spin</button>
+             <button id="reset" onClick="stopWheel();" class="button btnr border">stop</button>
+        </div>
+    <div id="center">
+            <p align="center">
+                <p id="winnerText" align="center" class="winner"></p>
+                <button id="removePlayer"  onClick="deleteSegment();"  style="display: none" class="removebutton  border">Remove player</button>
+            </p>
         </div>
     </body>
 </html>
